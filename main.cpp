@@ -93,7 +93,6 @@ void test(int iloscProb, vector<int> architektura)
 
 int main()
 {
-	
 	vector<int> architektura = {600,256,64,4};
 	float precyzja = 2.0;
 	test(1000,architektura);
