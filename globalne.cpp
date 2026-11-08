@@ -4,6 +4,10 @@
 #include <random>
 
 opisPola plansza[planszaX][planszaY];
+int planszaMinX=0;
+int planszaMaxX=planszaX-1;
+int planszaMinY=0;
+int planszaMaxY=planszaY-1;
 
 coordinate kordyCel = {0,0};
 

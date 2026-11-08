@@ -58,11 +58,11 @@ float znajdzMax(std::vector<float> tab)
 double obliczReward(opisPolaPamieci pole1, opisPolaPamieci pole2, coordinate kordy)
 {
 	float reward;
-	
-	if(abs(pole1.wysokosc-pole2.wysokosc)>=2) return -20;
-	if(pole2.czyOdwiedzone) reward = -1;
+	if(kordy==kordyCel) reward = 100;
+	else if(abs(pole1.wysokosc-pole2.wysokosc)>=2) reward = -20;
+	else if(pole2.czyOdwiedzone) reward = -1;
 	else reward = 0.5;
-	if(kordy==kordyCel) return 100;
+	
 	
 	return reward;
 }
@@ -178,19 +178,6 @@ void agent::ruch(bool nauka,bufor& pamiecDoNauki)
 		}
 		siec.wsteczPaczka(gradientStraty, iloscPaczki);
 		siec.aktualizuj();
-
-		// for(int i=0; i<32; i++)
-		// {
-		// 	std::vector<float> widokPrzed = zmianaWidoku(losowaneEXP[i].polePrzedRuchem,losowaneEXP[i].wysokoscPrzed);
-		// 	std::vector<float> widokPo = zmianaWidoku(losowaneEXP[i].polePoRuchu,losowaneEXP[i].wysokoscPo);
-		// 	std::vector<float> nextQ = siecDocelowa.oblicz(widokPo);
-		// 	float target = obliczTarget(nextQ,losowaneEXP[i].reward,losowaneEXP[i].czyKoniec);
-		// 	std::vector<float> wspomnienieQ = siec.oblicz(widokPrzed);
-		// 	std::vector<float> wynik = wspomnienieQ;
-		// 	wynik[losowaneEXP[i].strona] = target;
-		// 	siec.obliczGradient(wynik,32);
-		// }
-		// siec.aktualizuj();
 	}
 
 	licznikRuchow++;
@@ -207,7 +194,7 @@ void agent::updateView()
 			if(x==y and x==0) continue;
 			widokMapy[licznik]=opisPolaPamieci{};
 			
-			if(0<= this->kordy.x+x and this->kordy.x+x<planszaX and 0<=this->kordy.y+y and this->kordy.y+y<planszaY)
+			if(planszaMinX<= this->kordy.x+x and this->kordy.x+x<=planszaMaxX and planszaMinY<=this->kordy.y+y and this->kordy.y+y<=planszaMaxY)
 			{
 				if(widok[licznik])
 				{
@@ -453,7 +440,7 @@ void wysokosciOkna(coordinate agent, double h[7][7])
         {
             int x = agent.x +cx;
             int y = agent.y +cy;
-            if(x<0 || y<0 || x>=planszaX || y>=planszaY) h[cx+3][cy+3]=1000;
+            if(x<planszaMinX || y<planszaMinY || x>planszaMaxX || y>planszaMaxY) h[cx+3][cy+3]=1000;
             else h[cx+3][cy+3] = plansza[x][y].wysokosc;
         }
     }

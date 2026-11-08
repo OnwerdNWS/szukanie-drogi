@@ -8,7 +8,37 @@
 #include <algorithm>
 #include <chrono>
 
+#include <SFML/Graphics.hpp>
+
 using namespace std;
+
+void diagnostyka(Siec& siec, bufor& pamiec)
+{
+    std::vector<experience> probka = pamiec.losuj(256);
+    vector<int> aktywne;
+	aktywne.resize(siec.warstwy[0].wyjscia);
+    int wybory[4] = {0, 0, 0, 0};
+    for(experience& e : probka)
+    {
+        std::vector<float> q = siec.oblicz(zmianaWidoku(e.polePrzedRuchem, e.wysokoscPrzed));
+        wybory[indexMax(q)]++;
+        for(int i=0;i<siec.warstwy[0].wyjscia;i++)
+		{
+			float v = siec.warstwy[0].wyjscie[i];
+			if(0.0f < v && v < 0.99f) aktywne[i]++;
+		}
+    }
+	int iloscAktywnych=0;
+	for(int i=0; i<aktywne.size();i++)
+	{
+		if(aktywne[i]!=0)
+		{
+			iloscAktywnych++;
+		}
+	}
+    std::cout << "aktywne neurony w1: " << 100.0 * iloscAktywnych / siec.warstwy[0].wyjscia << "%"
+              << ", wybory ruchow: " << wybory[0] << " " << wybory[1] << " " << wybory[2] << " " << wybory[3] << std::endl;
+}
 
 int proba(agent &test, int maxKrokow, bool nauka,bufor& pamiecDoNauki, int seed)
 {
@@ -35,11 +65,12 @@ int proba(agent &test, int maxKrokow, bool nauka,bufor& pamiecDoNauki, int seed)
 	}
 }
 
-void trening(int iloscSesji,int iloscProb, vector<int> architektura, float& precyzja)
+void trening(int iloscSesji,int iloscProb, vector<int> architektura, float& precyzja,int fragment)
 {
-	float lr = 0.001;
+	float lr = 0.0001;
 	bufor pamiecDoNauki;
 	pamiecDoNauki.inicjalizacja();
+	int ruch = pow((planszaX/fragment),2)/2;
 	for(int a=0; a<iloscSesji;a++)
 	{
 		agent temp;
@@ -51,23 +82,29 @@ void trening(int iloscSesji,int iloscProb, vector<int> architektura, float& prec
 		auto start = chrono::steady_clock::now();
 		for(int c=0; c<iloscProb;c++)
 		{
-			int nrMapy = losowanieInt(0,100000);
-			int wynik = proba(temp,512,true, pamiecDoNauki,nrMapy);
-			if(wynik>0) 
+			int nrMapy = losowanieInt(0,1000000);
+			for(int f=0;f<pow(fragment,2);f++)
 			{
-				wygrane++;
+				planszaMinX= f%fragment;
+				planszaMaxX= planszaMinX+fragment-1;
+				planszaMinY= f/fragment;
+				planszaMaxY= planszaMinY+fragment-1;
+				int wynik = proba(temp,ruch,true, pamiecDoNauki,nrMapy);
+				if(wynik>0) wygrane++;
 			}
 		}
 		auto end = chrono::steady_clock::now();
-		cout << wygrane << "/" << iloscProb << endl;
+		cout << wygrane << "/" << iloscProb*pow(fragment,2) << endl;
 		auto czas = std::chrono::duration_cast<std::chrono::seconds>(end-start);
 		cout << "czas: " << czas.count() << "s" << endl;
 		temp.siec.zapisz();
 		precyzja = temp.precyzja;
+		diagnostyka(temp.siec,pamiecDoNauki);
+		// planszaWyswietl(temp.startKordy);
 	}
 }
 
-void test(int iloscProb, vector<int> architektura)
+void test(int iloscProb, vector<int> architektura,int fragment)
 {
 	agent bot;
 	bot.precyzja=10;
@@ -75,28 +112,40 @@ void test(int iloscProb, vector<int> architektura)
 	bufor pamiecDoNauki;
 	pamiecDoNauki.inicjalizacja();
 	bot.siecDocelowa = bot.siec;
-
+	int ruch = pow((planszaX/fragment),2)/4;
 	auto start = chrono::steady_clock::now();
-	double licznik=0;
+	float licznik=0;
 	for(int i=0; i<iloscProb;i++)
 	{
-		int wynik = proba(bot,512,false,pamiecDoNauki, i+1000000);
-		if(wynik>0) licznik++;
+		for(int f=0;f<pow(fragment,2);f++)
+		{
+			planszaMinX= f%fragment;
+			planszaMaxX= planszaMinX+fragment-1;
+			planszaMinY= f/fragment;
+			planszaMaxY= planszaMinY+fragment-1;
+			int wynik = proba(bot,ruch,false,pamiecDoNauki, i+1000000);
+			if(wynik>0) licznik++;
+		}
 	}
 	auto end = chrono::steady_clock::now();
-	cout << "------------Test na " << iloscProb << " prob------------" << endl;
-	cout << "zdawalnosc " << (licznik/iloscProb)*100 << "%" << endl;
+	cout << "------------Test na " << iloscProb*pow(fragment,2) << " prob------------" << endl;
+	cout << "zdawalnosc " << (licznik/(iloscProb*pow(fragment,2)))*100 << "% (" << licznik << ")" << endl;
 	auto czas = std::chrono::duration_cast<std::chrono::seconds>(end-start);
 	cout << "czas: " << czas.count() << "s" << endl;
 	cout << "-----------------------------------------" << endl;
 }
 
+
 int main()
 {
 	vector<int> architektura = {600,256,64,4};
-	float precyzja = 2.0;
-	test(1000,architektura);
-    trening(10,1000,architektura,precyzja);
-	test(1000,architektura);
+	float precyzja = 2.0f;
+	int fragment = planszaX/8;
+	test(1,architektura,fragment);
+    for(int i=0; i<10;i++)
+	{
+		trening(10,1,architektura,precyzja,fragment);
+		test(1,architektura,fragment);
+	}
     return 0;
 }

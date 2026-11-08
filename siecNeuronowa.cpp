@@ -323,8 +323,9 @@ std::vector<float> zmianaWidoku(opisPolaPamieci tab[rozmiarPamieci], int wysokos
 	std::vector<float> widok;
 	for(int i=0;i<rozmiarPamieci;i++)
 	{
-		float roznica = (tab[i].wysokosc-wysokoscAgenta)/8.0;
-		widok.push_back(tab[i].czyZnane ? roznica : 0.0);
+		float roznica = (tab[i].wysokosc-wysokoscAgenta)/maxWysokosc;
+		if(tab[i].czyZnane and !tab[i].granicaMapy) widok.push_back(roznica);
+		else widok.push_back(0.0f);
 		widok.push_back(tab[i].czyOdwiedzone);
 		widok.push_back(tab[i].granicaMapy);
 		widok.push_back(tab[i].czyZnane);

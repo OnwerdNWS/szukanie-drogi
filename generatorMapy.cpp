@@ -28,7 +28,7 @@ int BFS(coordinate bot) //program szukający najkrótszej drogi oraz zwraca ilos
 		{
 			coordinate temp = kolejka2.front();
 			kolejka2.pop();
-			if(temp.y<planszaY-1 && visited[temp.x][temp.y+1]==false)
+			if(temp.y<planszaMaxY && visited[temp.x][temp.y+1]==false)
 			{
 				int roznica = plansza[temp.x][temp.y].wysokosc - plansza[temp.x][temp.y+1].wysokosc;
 				if(roznica<0) roznica*= -1;
@@ -38,7 +38,7 @@ int BFS(coordinate bot) //program szukający najkrótszej drogi oraz zwraca ilos
 					kolejka.push({temp.x,temp.y+1});
 				}
 			}
-			if(temp.y>0 && visited[temp.x][temp.y-1]==false)
+			if(temp.y>planszaMinY && visited[temp.x][temp.y-1]==false)
 			{
 				int roznica = plansza[temp.x][temp.y].wysokosc - plansza[temp.x][temp.y-1].wysokosc;
 				if(roznica<0) roznica*= -1;
@@ -48,7 +48,7 @@ int BFS(coordinate bot) //program szukający najkrótszej drogi oraz zwraca ilos
 					kolejka.push({temp.x,temp.y-1});
 				}
 			}
-			if(temp.x<planszaX-1 && visited[temp.x+1][temp.y]==false)
+			if(temp.x<planszaMaxX && visited[temp.x+1][temp.y]==false)
 			{
 				int roznica = plansza[temp.x][temp.y].wysokosc - plansza[temp.x+1][temp.y].wysokosc;
 				if(roznica<0) roznica*= -1;
@@ -58,7 +58,7 @@ int BFS(coordinate bot) //program szukający najkrótszej drogi oraz zwraca ilos
 					kolejka.push({temp.x+1,temp.y});
 				}
 			}
-			if(temp.x>0 && visited[temp.x-1][temp.y]==false)
+			if(temp.x>planszaMinX && visited[temp.x-1][temp.y]==false)
 			{
 				int roznica = plansza[temp.x][temp.y].wysokosc - plansza[temp.x-1][temp.y].wysokosc;
 				if(roznica<0) roznica*= -1;
@@ -80,20 +80,21 @@ int BFS(coordinate bot) //program szukający najkrótszej drogi oraz zwraca ilos
 }
 void planszaWyswietl(coordinate bot)
 {
-	sf::RenderWindow window(sf::VideoMode({1024,1024}),"Plansza");
+	unsigned int wyswietlX = planszaMaxX-planszaMinX+1;
+	unsigned int wyswietlY = planszaMaxY-planszaMinY+1;
+	const float size = 1024.0f/wyswietlX;
+	sf::RenderWindow window(sf::VideoMode({wyswietlX*int(size),wyswietlY*int(size)}),"Fragment planszy");
+	sf::Image obraz({wyswietlX,wyswietlY}, sf::Color::Black);
 
-	const float size = 1024.0/planszaX;
-	sf::Image obraz({planszaX,planszaY}, sf::Color::Black);
-
-	for(int y = planszaY-1; y>=0; y--)
+	for(int y = planszaMaxY-planszaMinY; y>=0; y--)
 	{
-		for(int x=0; x<planszaX; x++)
+		for(int x=0; x<=planszaMaxX-planszaMinX; x++)
 		{
-			int przelicznik = (plansza[x][y].wysokosc+maxWysokosc)/(2.0*maxWysokosc)*255;
+			int przelicznik = (plansza[x+planszaMinX][y+planszaMinY].wysokosc+maxWysokosc)/(2.0*maxWysokosc)*255;
 			obraz.setPixel({(unsigned)x,(unsigned)y},sf::Color(przelicznik,0,0));
 		}
 	}
-		
+
 	sf::Texture tekstura(obraz);	//generowanie tekstury
 	// tekstura.setSmooth(true);		//wygładzenie tekstury
 	sf::Sprite mapa(tekstura);		//tworzenie mapy z tekstury
@@ -186,13 +187,14 @@ void generatorMapy(unsigned int seed) //rozstawia mape
 void rozstawienie(coordinate& bot, unsigned int seed) //rozstawia agenta i cel
 {
 	std::mt19937 genMapy(seed+1000000);
-	std::uniform_int_distribution<int> los(0,planszaX-1);
+	std::uniform_int_distribution<int> losX(planszaMinX,planszaMaxX);
+	std::uniform_int_distribution<int> losY(planszaMinY,planszaMaxY);
 	int krokiDoRozwiązania=-1;
 	do
 	{
-		bot={los(genMapy),los(genMapy)};
-		kordyCel={los(genMapy),los(genMapy)};
-		while(kordyCel==bot) kordyCel={los(genMapy),los(genMapy)};
+		bot={losX(genMapy),losY(genMapy)};
+		kordyCel={losX(genMapy),losY(genMapy)};
+		while(kordyCel==bot) kordyCel={losX(genMapy),losY(genMapy)};
 		krokiDoRozwiązania = BFS(bot);
 	} while (krokiDoRozwiązania<0);
 }

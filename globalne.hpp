@@ -5,6 +5,10 @@
 const int maxWysokosc = 32;
 const int planszaX=128;
 const int planszaY=128;
+extern int planszaMinX;
+extern int planszaMaxX;
+extern int planszaMinY;
+extern int planszaMaxY;
 
 const int rozmiarPamieci = 120;
 

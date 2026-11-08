@@ -24,7 +24,7 @@ struct agent{
 	void printMemory();
 	void clearTemporaryMemory();
 };
-void testAkcji(agent* bot, int wybranyRuch);
+// void testAkcji(agent* bot, int wybranyRuch);
 
 int indexMax(std::vector<float> tab);
 float znajdzMax(std::vector<float> tab);

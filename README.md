@@ -21,3 +21,8 @@ Program trenuje agenta, a potem testuje go na 1000 różnych mapach. Wagi zapisu
 - wizualizacja przebiegu testu
 - możliwość operowania agentem z tymi samymi danymi co on
 - ruch w 360 stopniach
+
+
+## Problemy (program chwilowo nie działa)
+- nurony obumierają
+- szukam błędów w uczeniu 
