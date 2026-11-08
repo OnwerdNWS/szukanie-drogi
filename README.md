@@ -14,7 +14,7 @@ g++ -O3 -march=native -fopenmp-simd *.cpp -o program.exe -lsfml-graphics -lsfml-
 ```
 
 ## Uruchomienie 
-Program trenuje agenta, a potem testuje go na 1000 różnych mapach. Wagi zapisują się w folderze "dane z sieci" (program go tworzy o ile go nie ma)
+Program trenuje agenta, a potem testuje go na różnych mapach. Wagi zapisują się w folderze "dane z sieci" (program go tworzy o ile go nie ma)
 
 
 ## Plany
@@ -22,7 +22,8 @@ Program trenuje agenta, a potem testuje go na 1000 różnych mapach. Wagi zapisu
 - możliwość operowania agentem z tymi samymi danymi co on
 - ruch w 360 stopniach
 
-
-## Problemy (program chwilowo nie działa)
-- nurony obumierają
-- szukam błędów w uczeniu 
+## Update
+- naprawione uczenie (program się uczy poprawnie choć potrzebuje zacząć od mniejszych map)
+- dodana fragmentacja map
+- dodano regenerację neuronów (funkcja redo)
+- dodano diagnostykę

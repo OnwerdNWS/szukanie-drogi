@@ -26,3 +26,11 @@ int losowanieInt(int min, int max)
     int wylosowana = distrib(gen); //losowanie 
     return wylosowana;
 }
+void fragmentacja(int nrFragmentu,int rozmiar)
+{
+	int ileNaOs = planszaX/rozmiar;
+	planszaMinX= (nrFragmentu%ileNaOs)*rozmiar;
+	planszaMaxX= planszaMinX+rozmiar-1;
+	planszaMinY= (nrFragmentu/ileNaOs)*rozmiar;
+	planszaMaxY= planszaMinY+rozmiar-1;
+}

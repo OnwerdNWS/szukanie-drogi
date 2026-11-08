@@ -52,3 +52,5 @@ extern coordinate kordyCel;
 
 double losowanieDouble(double min, double max);
 int losowanieInt(int min, int max);
+
+void fragmentacja(int nrFragmentu,int rozmiar);

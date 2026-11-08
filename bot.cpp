@@ -147,7 +147,6 @@ void agent::ruch(bool nauka,bufor& pamiecDoNauki)
 	if(pamiecDoNauki.dlugosc>=pamiecDoNauki.momentNauki && licznikRuchow%16==0 && nauka)
 	{
 		std::vector<experience> losowaneEXP = pamiecDoNauki.losuj(32);
-		// siec.zerujGradient();
 
 		const int iloscPaczki = 32;
 		const int rozmiarWejscia = 600;
@@ -176,6 +175,7 @@ void agent::ruch(bool nauka,bufor& pamiecDoNauki)
 			int strona = losowaneEXP[i].strona;
 			gradientStraty[i * 4 + strona] = (Qprzed[i * 4 + strona] - target[i])/iloscPaczki;
 		}
+		siec.zerujGradient();
 		siec.wsteczPaczka(gradientStraty, iloscPaczki);
 		siec.aktualizuj();
 	}

@@ -323,7 +323,7 @@ std::vector<float> zmianaWidoku(opisPolaPamieci tab[rozmiarPamieci], int wysokos
 	std::vector<float> widok;
 	for(int i=0;i<rozmiarPamieci;i++)
 	{
-		float roznica = (tab[i].wysokosc-wysokoscAgenta)/maxWysokosc;
+		float roznica = (tab[i].wysokosc-wysokoscAgenta)/2.0f;
 		if(tab[i].czyZnane and !tab[i].granicaMapy) widok.push_back(roznica);
 		else widok.push_back(0.0f);
 		widok.push_back(tab[i].czyOdwiedzone);
@@ -355,4 +355,46 @@ std::vector<experience> bufor::losuj(int ilosc)
 		temp.push_back(doswiadczenia[losowanieInt(0,dlugosc-1)]);
 	}
 	return temp;
+}
+
+
+void redo(Siec& siec, bufor& pamiec)
+{
+	WarstwaM& L0 = siec.warstwy[0];
+	WarstwaM& L1 = siec.warstwy[1];
+	std::vector<int> aktywne(L0.wyjscia, 0);
+
+	std::vector<experience> probka = pamiec.losuj(256);
+	for(experience& e : probka)
+	{
+		siec.oblicz(zmianaWidoku(e.polePrzedRuchem, e.wysokoscPrzed));
+		for(int i=0;i<L0.wyjscia;i++)
+		{
+			if(0.0f < L0.wyjscie[i]) aktywne[i]++;
+		}
+	}
+	int licznikWskrzeszonych=0;
+	for(int i=0;i<L0.wyjscia;i++)
+	{
+		if(aktywne[i]>0) continue;
+		licznikWskrzeszonych++;
+		for(int j=0;j<L0.wejscia;j++)
+		{
+			int index = i*L0.wejscia+j;
+			L0.waga[index]=losowanieDouble(-0.1,0.1);
+			L0.mWaga[index]=0.0f;
+			L0.vWaga[index]=0.0f;
+		}
+		L0.bias[i]=0.0f;
+		L0.mBias[i]=0.0f;
+		L0.vBias[i]=0.0f;
+		for(int j=0;j<L1.wyjscia;j++)
+		{
+			int index = j*L0.wyjscia+i;
+			L1.waga[index]=0.0f;
+			L1.mWaga[index]=0.0f;
+			L1.vWaga[index]=0.0f;
+		}
+	}
+	// std::cout << "ilość wskrzeszonych neuronów: " << licznikWskrzeszonych << std::endl;
 }

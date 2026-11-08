@@ -78,3 +78,4 @@ struct bufor{
 	std::vector<experience> losuj(int ilosc);
 };
 
+void redo(Siec& siec, bufor& pamiec);
