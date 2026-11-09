@@ -23,7 +23,4 @@ Program trenuje agenta, a potem testuje go na różnych mapach. Wagi zapisują s
 - ruch w 360 stopniach
 
 ## Update
-- naprawione uczenie (program się uczy poprawnie choć potrzebuje zacząć od mniejszych map)
-- dodana fragmentacja map
-- dodano regenerację neuronów (funkcja redo)
-- dodano diagnostykę
+- dodano wizualizajcę ruchów agenta (można sprawdzić jak wygląda jego każdt ruch w danejpróbie)
