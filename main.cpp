@@ -3,6 +3,7 @@
 #include "generatorMapy.hpp"
 #include "bot.hpp"
 #include "siecNeuronowa.hpp"
+#include "wizualizacja.hpp"
 #include <cmath>
 #include <vector>
 #include <algorithm>
@@ -134,7 +135,11 @@ int main()
 {
 	vector<int> architektura = {600,256,64,4};
 	float precyzja = 2.0f;
-	int rozmiar = 32;
+	int rozmiar = 8;
+	// agent bot;
+	// bot.siec.inicjalizacja(architektura);
+	// bot.siecDocelowa = bot.siec;
+	// pokazTest(bot, 1, rozmiar, 1);
 	test(10,architektura,rozmiar);
     for(int i=0; i<10;i++)
 	{

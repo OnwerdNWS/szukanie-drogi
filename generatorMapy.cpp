@@ -91,7 +91,7 @@ void planszaWyswietl(coordinate bot)
 		for(int x=0; x<=planszaMaxX-planszaMinX; x++)
 		{
 			int przelicznik = (plansza[x+planszaMinX][y+planszaMinY].wysokosc+maxWysokosc)/(2.0*maxWysokosc)*255;
-			obraz.setPixel({(unsigned)x,(unsigned)y},sf::Color(przelicznik,0,0));
+			obraz.setPixel({(unsigned)x,(unsigned)y},sf::Color(przelicznik,przelicznik/2,0));
 		}
 	}
 
