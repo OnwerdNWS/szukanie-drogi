@@ -18,9 +18,8 @@ Program trenuje agenta, a potem testuje go na różnych mapach. Wagi zapisują s
 
 
 ## Plany
-- wizualizacja przebiegu testu
-- możliwość operowania agentem z tymi samymi danymi co on
 - ruch w 360 stopniach
 
 ## Update
-- dodano wizualizajcę ruchów agenta (można sprawdzić jak wygląda jego każdt ruch w danejpróbie)
+- dodano wizualizajcę ruchów agenta przez pokazTest() (można sprawdzić jak wygląda jego każdy ruch w danej próbie)
+- można teraz przetestować się z tymi damymi danymi co otrzymuje agent za pomocą funkcji przejdzMape()

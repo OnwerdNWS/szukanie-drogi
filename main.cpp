@@ -8,7 +8,6 @@
 #include <vector>
 #include <algorithm>
 #include <chrono>
-#include <SFML/Graphics.hpp>
 
 using namespace std;
 
@@ -135,11 +134,7 @@ int main()
 {
 	vector<int> architektura = {600,256,64,4};
 	float precyzja = 2.0f;
-	int rozmiar = 8;
-	// agent bot;
-	// bot.siec.inicjalizacja(architektura);
-	// bot.siecDocelowa = bot.siec;
-	// pokazTest(bot, 1, rozmiar, 1);
+	int rozmiar = 64;
 	test(10,architektura,rozmiar);
     for(int i=0; i<10;i++)
 	{
